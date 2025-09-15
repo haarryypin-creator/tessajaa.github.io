@@ -161,101 +161,106 @@
   </div>
 
   <script>
-    // fungsi ubah angka ke huruf Indonesia
-    function numberToWords(n) {
-      const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
-      if (n < 12) return satuan[n];
-      else if (n < 20) return numberToWords(n - 10) + " belas";
-      else if (n < 100) return numberToWords(Math.floor(n / 10)) + " puluh " + numberToWords(n % 10);
-      else if (n < 200) return "seratus " + numberToWords(n - 100);
-      else if (n < 1000) return numberToWords(Math.floor(n / 100)) + " ratus " + numberToWords(n % 100);
-      else if (n < 2000) return "seribu " + numberToWords(n - 1000);
-      else if (n < 1000000) return numberToWords(Math.floor(n / 1000)) + " ribu " + numberToWords(n % 1000);
-      else if (n < 1000000000) return numberToWords(Math.floor(n / 1000000)) + " juta " + numberToWords(n % 1000000);
-      else return n.toString();
+  // fungsi ubah angka ke huruf Indonesia
+  function numberToWords(n) {
+    const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+    if (n < 12) return satuan[n];
+    else if (n < 20) return numberToWords(n - 10) + " belas";
+    else if (n < 100) return numberToWords(Math.floor(n / 10)) + " puluh " + numberToWords(n % 10);
+    else if (n < 200) return "seratus " + numberToWords(n - 100);
+    else if (n < 1000) return numberToWords(Math.floor(n / 100)) + " ratus " + numberToWords(n % 100);
+    else if (n < 2000) return "seribu " + numberToWords(n - 1000);
+    else if (n < 1000000) return numberToWords(Math.floor(n / 1000)) + " ribu " + numberToWords(n % 1000);
+    else if (n < 1000000000) return numberToWords(Math.floor(n / 1000000)) + " juta " + numberToWords(n % 1000000);
+    else return n.toString();
+  }
+
+  let intervalId;
+  function hitungWaktuHidup() {
+    const namaUser = document.getElementById("namaUser").value.trim();
+    const tanggalLahir = document.getElementById("tanggalLahir").value;
+    const messageBox = document.getElementById("messageBox");
+    const outputContainer = document.getElementById("outputContainer");
+
+    messageBox.innerText = "";
+    document.getElementById("copyMessageBox").innerText = "";
+    outputContainer.classList.add("hidden");
+
+    if (!namaUser) {
+      messageBox.innerText = "isi dulu lah kocak";
+      return;
+    }
+    if (!tanggalLahir) {
+      messageBox.innerText = "Tanggalnya isi dulu coyy 😑";
+      return;
     }
 
-    let intervalId;
-    function hitungWaktuHidup() {
-      const namaUser = document.getElementById("namaUser").value.trim();
-      const tanggalLahir = document.getElementById("tanggalLahir").value;
-      const messageBox = document.getElementById("messageBox");
-      const outputContainer = document.getElementById("outputContainer");
-
-      messageBox.innerText = "";
-      document.getElementById("copyMessageBox").innerText = "";
-      outputContainer.classList.add("hidden");
-
-      if (!namaUser) {
-        messageBox.innerText = "isi dulu lah kocak";
-        return;
-      }
-      if (!tanggalLahir) {
-        messageBox.innerText = "Tanggalnya isi dulu coyy 😑";
-        return;
-      }
-
-      const lahir = new Date(tanggalLahir);
-      if (lahir > new Date()) {
-        messageBox.innerText = "Tanggal lahir tidak valid. Kamu belum lahir!";
-        return;
-      }
-
-      if (intervalId) clearInterval(intervalId);
-
-      outputContainer.classList.remove("hidden");
-      document.getElementById("outputBornDate").innerText = Sejak ${lahir.toLocaleDateString("id-ID")};
-
-      intervalId = setInterval(() => {
-        const sekarang = new Date();
-        const selisihMs = sekarang - lahir;
-        const selisihDetik = Math.floor(selisihMs / 1000);
-
-        // pake huruf
-        document.getElementById("outputSeconds").innerText = 
-          ${namaUser} dah idup selama ${numberToWords(selisihDetik)} detik;
-
-        let tahun = sekarang.getFullYear() - lahir.getFullYear();
-        let bulan = sekarang.getMonth() - lahir.getMonth();
-        let hari = sekarang.getDate() - lahir.getDate();
-
-        if (hari < 0) {
-          bulan -= 1;
-          const tanggalLalu = new Date(sekarang.getFullYear(), sekarang.getMonth(), 0);
-          hari += tanggalLalu.getDate();
-        }
-        if (bulan < 0) {
-          tahun -= 1;
-          bulan += 12;
-        }
-
-        let sisa = Math.floor((sekarang - new Date(lahir.getFullYear() + tahun, lahir.getMonth() + bulan, lahir.getDate())) / 1000);
-        const jam = Math.floor(sisa / 3600);
-        sisa %= 3600;
-        const menit = Math.floor(sisa / 60);
-        const detik = sisa % 60;
-
-        document.getElementById("outputYears").innerText = tahun.toLocaleString("id-ID");
-        document.getElementById("outputMonths").innerText = bulan.toLocaleString("id-ID");
-        document.getElementById("outputDays").innerText = hari.toLocaleString("id-ID");
-        document.getElementById("outputHours").innerText = jam.toLocaleString("id-ID");
-        document.getElementById("outputMinutes").innerText = menit.toLocaleString("id-ID");
-        document.getElementById("outputSecondsCard").innerText = detik.toLocaleString("id-ID");
-      }, 1000);
+    // tambahin T00:00:00 biar gak error di browser tertentu
+    const lahir = new Date(tanggalLahir + "T00:00:00");
+    if (isNaN(lahir)) {
+      messageBox.innerText = "Tanggal lahir tidak valid.";
+      return;
+    }
+    if (lahir > new Date()) {
+      messageBox.innerText = "Tanggal lahir tidak valid. Kamu belum lahir!";
+      return;
     }
 
-    function salinHasil() {
-      const outputText = document.getElementById("outputSeconds").innerText;
-      const el = document.createElement('textarea');
-      el.value = outputText;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      const copyMessageBox = document.getElementById("copyMessageBox");
-      copyMessageBox.innerText = "Hasil berhasil disalin!";
-      setTimeout(() => copyMessageBox.innerText = "", 2000);
-    }
-  </script>
+    if (intervalId) clearInterval(intervalId);
+
+    outputContainer.classList.remove("hidden");
+    document.getElementById("outputBornDate").innerText = Sejak ${lahir.toLocaleDateString("id-ID")};
+
+    intervalId = setInterval(() => {
+      const sekarang = new Date();
+      const selisihMs = sekarang - lahir;
+      const selisihDetik = Math.floor(selisihMs / 1000);
+
+      // pakai angka biar aman
+      document.getElementById("outputSeconds").innerText =
+        ${namaUser} dah idup selama ${selisihDetik.toLocaleString("id-ID")} detik;
+
+      let tahun = sekarang.getFullYear() - lahir.getFullYear();
+      let bulan = sekarang.getMonth() - lahir.getMonth();
+      let hari = sekarang.getDate() - lahir.getDate();
+
+      if (hari < 0) {
+        bulan -= 1;
+        const tanggalLalu = new Date(sekarang.getFullYear(), sekarang.getMonth(), 0);
+        hari += tanggalLalu.getDate();
+      }
+      if (bulan < 0) {
+        tahun -= 1;
+        bulan += 12;
+      }
+
+      let sisa = Math.floor((sekarang - new Date(lahir.getFullYear() + tahun, lahir.getMonth() + bulan, lahir.getDate())) / 1000);
+      const jam = Math.floor(sisa / 3600);
+      sisa %= 3600;
+      const menit = Math.floor(sisa / 60);
+      const detik = sisa % 60;
+
+      document.getElementById("outputYears").innerText = tahun.toLocaleString("id-ID");
+      document.getElementById("outputMonths").innerText = bulan.toLocaleString("id-ID");
+      document.getElementById("outputDays").innerText = hari.toLocaleString("id-ID");
+      document.getElementById("outputHours").innerText = jam.toLocaleString("id-ID");
+      document.getElementById("outputMinutes").innerText = menit.toLocaleString("id-ID");
+      document.getElementById("outputSecondsCard").innerText = detik.toLocaleString("id-ID");
+    }, 1000);
+  }
+
+  function salinHasil() {
+    const outputText = document.getElementById("outputSeconds").innerText;
+    const el = document.createElement('textarea');
+    el.value = outputText;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    const copyMessageBox = document.getElementById("copyMessageBox");
+    copyMessageBox.innerText = "Hasil berhasil disalin!";
+    setTimeout(() => copyMessageBox.innerText = "", 2000);
+  }
+</script>
 </body>
 </html>
