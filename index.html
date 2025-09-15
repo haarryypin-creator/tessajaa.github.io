@@ -1,1 +1,261 @@
-# tessajaa.github.io
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hitung sudah berapa lama kita hidup :)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    
+    body {
+      background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    }
+
+    .form-container {
+      width: 100%;
+      background: transparent padding-box,
+      linear-gradient(145deg, transparent 35%, #e81cff, #40c9ff) border-box;
+      border: 2px solid transparent;
+      padding: 32px 24px;
+      font-size: 14px;
+      font-family: inherit;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-sizing: border-box;
+      border-radius: 16px;
+      background-size: 200% 100%;
+      animation: gradient 5s ease infinite;
+      justify-content: center;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .form-container button:active { scale: 0.95; }
+    .form-container .form { display: flex; flex-direction: column; gap: 20px; }
+    .form-container .form-group { display: flex; flex-direction: column; gap: 2px; }
+
+    .form-container .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #bdbdbd;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .form-container .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: black;
+      font-family: inherit;
+      background-color: transparent;
+      border: 1px solid #414141;
+    }
+
+    .form-container .form-group input::placeholder { opacity: 0.5; }
+    .form-container .form-group input:focus {
+      outline: none;
+      border-color: #7e74f1;
+    }
+
+    .form-container .form-submit-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      color: #fff;
+      font-weight: 600;
+      width: 100%;
+      background: linear-gradient(90deg, #efd5ff 0%, #7e74f1 100%);
+      border: 1px solid #414141;
+      padding: 12px 16px;
+      font-size: inherit;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    .form-container .form-submit-btn:hover {
+      background-color: #313131;
+      color: #fff;
+      border-color: #fff;
+    }
+
+    #outputSeconds {
+      color: #7e74f1;
+      font-weight: 700;
+      font-size: 1.5rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2) none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl shadow-2xl p-8 max-w-lg w-full flex flex-col items-center text-center">
+    <h1 class="text-4xl font-bold text-gray-800 mb-2">Hitung waktu hidup</h1> <br>
+    <p class="text-gray-600 mb-6">Masukkan nama dan tanggal lahir kamu untuk mengetahui berapa lama kamu sudah hidup.</p>
+
+    <div class="form-container">
+      <div class="form">
+        <div class="form-group">
+          <label for="namaUser">Nama</label>
+          <input type="text" id="namaUser" placeholder="siapa namanyaa">
+        </div>
+        <div class="form-group">
+          <label for="tanggalLahir">Tanggal Lahir</label>
+          <input type="date" id="tanggalLahir">
+        </div>
+        <button type="button" onclick="hitungWaktuHidup()" class="form-submit-btn">
+          Hitung
+        </button>
+      </div>
+    </div>
+
+    <div id="messageBox" class="text-red-500 mt-4 text-sm font-medium"></div>
+
+    <div id="outputContainer" class="mt-8 hidden w-full">
+      <h2 class="text-xl font-semibold text-gray-800">Hasil:</h2>
+      <p id="outputSeconds" class="mt-2"></p>
+      
+      <div id="gridResult" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 w-full">
+        <div class="bg-blue-50 rounded-xl p-4 shadow text-center">
+          <p id="outputYears" class="text-2xl font-bold text-blue-600"></p>
+          <p class="text-sm text-gray-500 mt-1">Tahun</p>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 shadow text-center">
+          <p id="outputMonths" class="text-2xl font-bold text-blue-600"></p>
+          <p class="text-sm text-gray-500 mt-1">Bulan</p>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 shadow text-center">
+          <p id="outputDays" class="text-2xl font-bold text-blue-600"></p>
+          <p class="text-sm text-gray-500 mt-1">Hari</p>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 shadow text-center">
+          <p id="outputHours" class="text-2xl font-bold text-blue-600"></p>
+          <p class="text-sm text-gray-500 mt-1">Jam</p>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 shadow text-center">
+          <p id="outputMinutes" class="text-2xl font-bold text-blue-600"></p>
+          <p class="text-sm text-gray-500 mt-1">Menit</p>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 shadow text-center">
+          <p id="outputSecondsCard" class="text-2xl font-bold text-blue-600"></p>
+          <p class="text-sm text-gray-500 mt-1">Detik</p>
+        </div>
+      </div>
+      <p id="outputBornDate" class="text-gray-500 text-sm mt-4"></p>
+      
+      <button onclick="salinHasil()"
+              class="mt-6 px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-colors duration-300">
+        Salin Hasil
+      </button>
+      <div id="copyMessageBox" class="text-green-500 mt-2 text-sm font-medium"></div>
+    </div>
+  </div>
+
+  <script>
+    // fungsi ubah angka ke huruf Indonesia
+    function numberToWords(n) {
+      const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+      if (n < 12) return satuan[n];
+      else if (n < 20) return numberToWords(n - 10) + " belas";
+      else if (n < 100) return numberToWords(Math.floor(n / 10)) + " puluh " + numberToWords(n % 10);
+      else if (n < 200) return "seratus " + numberToWords(n - 100);
+      else if (n < 1000) return numberToWords(Math.floor(n / 100)) + " ratus " + numberToWords(n % 100);
+      else if (n < 2000) return "seribu " + numberToWords(n - 1000);
+      else if (n < 1000000) return numberToWords(Math.floor(n / 1000)) + " ribu " + numberToWords(n % 1000);
+      else if (n < 1000000000) return numberToWords(Math.floor(n / 1000000)) + " juta " + numberToWords(n % 1000000);
+      else return n.toString();
+    }
+
+    let intervalId;
+    function hitungWaktuHidup() {
+      const namaUser = document.getElementById("namaUser").value.trim();
+      const tanggalLahir = document.getElementById("tanggalLahir").value;
+      const messageBox = document.getElementById("messageBox");
+      const outputContainer = document.getElementById("outputContainer");
+
+      messageBox.innerText = "";
+      document.getElementById("copyMessageBox").innerText = "";
+      outputContainer.classList.add("hidden");
+
+      if (!namaUser) {
+        messageBox.innerText = "isi dulu lah kocak";
+        return;
+      }
+      if (!tanggalLahir) {
+        messageBox.innerText = "Tanggalnya isi dulu coyy 😑";
+        return;
+      }
+
+      const lahir = new Date(tanggalLahir);
+      if (lahir > new Date()) {
+        messageBox.innerText = "Tanggal lahir tidak valid. Kamu belum lahir!";
+        return;
+      }
+
+      if (intervalId) clearInterval(intervalId);
+
+      outputContainer.classList.remove("hidden");
+      document.getElementById("outputBornDate").innerText = Sejak ${lahir.toLocaleDateString("id-ID")};
+
+      intervalId = setInterval(() => {
+        const sekarang = new Date();
+        const selisihMs = sekarang - lahir;
+        const selisihDetik = Math.floor(selisihMs / 1000);
+
+        // pake huruf
+        document.getElementById("outputSeconds").innerText = 
+          ${namaUser} dah idup selama ${numberToWords(selisihDetik)} detik;
+
+        let tahun = sekarang.getFullYear() - lahir.getFullYear();
+        let bulan = sekarang.getMonth() - lahir.getMonth();
+        let hari = sekarang.getDate() - lahir.getDate();
+
+        if (hari < 0) {
+          bulan -= 1;
+          const tanggalLalu = new Date(sekarang.getFullYear(), sekarang.getMonth(), 0);
+          hari += tanggalLalu.getDate();
+        }
+        if (bulan < 0) {
+          tahun -= 1;
+          bulan += 12;
+        }
+
+        let sisa = Math.floor((sekarang - new Date(lahir.getFullYear() + tahun, lahir.getMonth() + bulan, lahir.getDate())) / 1000);
+        const jam = Math.floor(sisa / 3600);
+        sisa %= 3600;
+        const menit = Math.floor(sisa / 60);
+        const detik = sisa % 60;
+
+        document.getElementById("outputYears").innerText = tahun.toLocaleString("id-ID");
+        document.getElementById("outputMonths").innerText = bulan.toLocaleString("id-ID");
+        document.getElementById("outputDays").innerText = hari.toLocaleString("id-ID");
+        document.getElementById("outputHours").innerText = jam.toLocaleString("id-ID");
+        document.getElementById("outputMinutes").innerText = menit.toLocaleString("id-ID");
+        document.getElementById("outputSecondsCard").innerText = detik.toLocaleString("id-ID");
+      }, 1000);
+    }
+
+    function salinHasil() {
+      const outputText = document.getElementById("outputSeconds").innerText;
+      const el = document.createElement('textarea');
+      el.value = outputText;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      const copyMessageBox = document.getElementById("copyMessageBox");
+      copyMessageBox.innerText = "Hasil berhasil disalin!";
+      setTimeout(() => copyMessageBox.innerText = "", 2000);
+    }
+  </script>
+</body>
+</html>
