@@ -13,6 +13,7 @@
       background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
     }
 
+    /* === STYLE FORM DARI UIVERSE.IO === */
     .form-container {
       width: 100%;
       background: transparent padding-box,
@@ -56,14 +57,20 @@
       border-radius: 8px;
       color: black;
       font-family: inherit;
-      background-color: transparent;
+      background-color: white;  /* FIX: diganti dari transparent */
       border: 1px solid #414141;
+      z-index: 1;
     }
 
     .form-container .form-group input::placeholder { opacity: 0.5; }
     .form-container .form-group input:focus {
       outline: none;
       border-color: #7e74f1;
+    }
+
+    /* Biar input date lebih konsisten tampilannya */
+    input[type="date"] {
+      cursor: pointer;
     }
 
     .form-container .form-submit-btn {
@@ -89,11 +96,12 @@
       border-color: #fff;
     }
 
+    /* === STYLE UNTUK HASIL === */
     #outputSeconds {
-      color: #7e74f1;
+      color: #7e74f1;       /* ganti warna sesuai selera */
       font-weight: 700;
-      font-size: 1.5rem;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.2) none;
+      font-size: 1.5rem;   /* ukuran teks */
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2) none; /* opsional */
     }
   </style>
 </head>
@@ -102,6 +110,7 @@
     <h1 class="text-4xl font-bold text-gray-800 mb-2">Hitung waktu hidup</h1> <br>
     <p class="text-gray-600 mb-6">Masukkan nama dan tanggal lahir kamu untuk mengetahui berapa lama kamu sudah hidup.</p>
 
+    <!-- FORM UIVERSE -->
     <div class="form-container">
       <div class="form">
         <div class="form-group">
@@ -118,8 +127,10 @@
       </div>
     </div>
 
+    <!-- Pesan Error -->
     <div id="messageBox" class="text-red-500 mt-4 text-sm font-medium"></div>
 
+    <!-- Container hasil -->
     <div id="outputContainer" class="mt-8 hidden w-full">
       <h2 class="text-xl font-semibold text-gray-800">Hasil:</h2>
       <p id="outputSeconds" class="mt-2"></p>
@@ -181,11 +192,7 @@
         return;
       }
 
-      const lahir = new Date(tanggalLahir + "T00:00:00");
-      if (isNaN(lahir)) {
-        messageBox.innerText = "Tanggal lahir tidak valid.";
-        return;
-      }
+      const lahir = new Date(tanggalLahir);
       if (lahir > new Date()) {
         messageBox.innerText = "Tanggal lahir tidak valid. Kamu belum lahir!";
         return;
@@ -201,9 +208,7 @@
         const selisihMs = sekarang - lahir;
         const selisihDetik = Math.floor(selisihMs / 1000);
 
-        // pakai angka biar aman
-        document.getElementById("outputSeconds").innerText = 
-          `${namaUser} dah idup selama ${selisihDetik.toLocaleString("id-ID")} detik`;
+        document.getElementById("outputSeconds").innerText = `${namaUser} dah idup selama ${selisihDetik.toLocaleString("id-ID")} detik`;
 
         let tahun = sekarang.getFullYear() - lahir.getFullYear();
         let bulan = sekarang.getMonth() - lahir.getMonth();
@@ -249,5 +254,3 @@
   </script>
 </body>
 </html>
-
-  
